@@ -1,5 +1,6 @@
 package edu.miu.cse.securitydemo.config;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -43,5 +44,13 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
 //                .map(authority -> authority.getAuthority())
                 .collect(Collectors.joining(","));
+    }
+
+    public Claims getClaims(String token){
+        return Jwts.parser()
+                .verifyWith(signInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
