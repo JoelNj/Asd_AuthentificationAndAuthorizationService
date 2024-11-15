@@ -1,5 +1,6 @@
 package edu.miu.cse.securitydemo.config;
 
+import edu.miu.cse.securitydemo.user.Permission;
 import edu.miu.cse.securitydemo.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +33,10 @@ public class SecurityConfiguration {
 //                                        .requestMatchers("/api/v1/auth/authenticate").permitAll()
                                         .requestMatchers("/api/v1/admin/**").hasRole(Role.ADMIN.name())
                                         .requestMatchers("/api/v1/management/**").hasAnyRole(Role.ADMIN.name(), Role.MEMBER.name())
+                                        .requestMatchers("/api/v1/management/member-only").hasAnyAuthority(
+                                                Permission.MEMBER_READ.getPermission(),
+                                                Permission.MEMBER_WRITE.getPermission()
+                                        )
                                         .anyRequest()
                                         .authenticated()
                 )
