@@ -25,6 +25,10 @@ public class AuthenticationService {
     private final UserDetailsService userDetailsService;
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+        // I want first to check if the current user has already been added in the database
+       if( userRepository.findByUsername(registerRequest.username()).isPresent() ){
+           return null;
+       }
         //Construct user object from registerRequest
         User user = new User(
                 registerRequest.firstName(),
@@ -34,6 +38,7 @@ public class AuthenticationService {
                 registerRequest.role()
         );
         //save the user
+
         User registeredUser = userRepository.save(user);
         //generate token
         String token = jwtService.generateToken(registeredUser);
